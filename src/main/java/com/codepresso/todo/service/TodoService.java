@@ -2,6 +2,7 @@ package com.codepresso.todo.service;
 
 import java.util.List;
 
+import com.codepresso.todo.mapper.TodoMapper;
 import com.codepresso.todo.vo.Todo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,22 +10,22 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TodoService {
+    private TodoMapper todoMapper;
 
-    private List<Todo> todoList;
+    public TodoService(TodoMapper todoMapper){
+        this.todoMapper = todoMapper;
+    }
 
-    public TodoService(List<Todo> todoList) {this.todoList = todoList;}
-    //todo 멤버 변수 todoList에 의존성 주입을 하기 위한 코드
-
-    public void addTodo(Todo todo) {
-        todo.setId(todoList.size());
-        todoList.add(todo);
+    public void addTodo(Todo todo){
+        todo.setIsCompleted("N");
+        todoMapper.save(todo);
     }
 
     public List<Todo> getTodoList(){
-        return todoList;
+        return todoMapper.findAll();
     }
 
-    public void deleteTodo(int index) {
-        todoList.remove(index);
+    public void deleteTodo(int id) {
+        todoMapper.delete(id);
     }
 }
